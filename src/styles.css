@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+/* 1. Giá trị màu của 3 theme (nguồn duy nhất) */
+@import './styles/tokens.css';
+/* 2. Map token → class Tailwind + utility dùng chung */
+@import './styles/tailwind-theme.css';
+/* 3. Base, khung app 390px, hiệu ứng đổi theme */
+@import './styles/base.css';

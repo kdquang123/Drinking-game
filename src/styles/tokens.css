@@ -1,0 +1,184 @@
+/*
+ * Design tokens – Thật hay Thách v1.0 (mục 12.1)
+ * Bổ sung so với doc:
+ *   --back-on                 màu nội dung trên mặt sau thẻ úp (doc 6.13 có nhắc nhưng chưa khai báo)
+ *   --primary-strong(-on)     nền "đang chọn" có chữ nhỏ < 18.66px đậm (Light 2027 đạt 4.5:1)
+ *   --w4…w9 / --wt4…wt9       10 màu người chơi khác nhau, mỗi người giữ 1 slot suốt ván
+ *   --backdrop                nền bên ngoài khung 390px (tablet/desktop)
+ *   Light 2027: --w0 #3D7BFF → #2F6BF0 để chữ trắng trên avatar/lát đạt tương phản
+ *
+ * Theme áp dụng qua thuộc tính data-theme. Có thể đặt trên <html> (toàn app)
+ * hoặc trên một khung con (xem trước theme ở màn Chọn giao diện).
+ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #241548;
+  --glow: #3f2385;
+  --backdrop: #170d30;
+  --surface: #33206a;
+  --text: #ffffff;
+  --muted: #bdb2e6;
+  --ink: #0b0618;
+  --divider: rgb(255 255 255 / 0.08);
+  --off: #3a2a70;
+  --off-text: #9c91cc;
+  --primary: #ffd23f;
+  --on-primary: #0b0618;
+  --primary-strong: #ffd23f;
+  --on-primary-strong: #0b0618;
+  --toggle-on: #4dff9a;
+  --toggle-off: #4a3790;
+  --error: #ff4fa3;
+
+  --truth: #2ee6ff;
+  --on-truth: #0b0618;
+  --dare: #ff4fa3;
+  --on-dare: #0b0618;
+  --drink: #ffd23f;
+  --on-drink: #0b0618;
+  --ok: #4dff9a;
+  --on-ok: #0b0618;
+
+  --card: #fff6e5;
+  --card-text: #231a4d;
+  --truth-ink: #0a7e9e;
+  --dare-ink: #c8186c;
+  --drink-ink: #8a5a00;
+  --back: #ff4fa3;
+  --back-on: #0b0618;
+  --back-stripe: rgb(11 6 24 / 0.14);
+
+  --w0: #2ee6ff; --wt0: #0b0618;
+  --w1: #ffd23f; --wt1: #0b0618;
+  --w2: #4dff9a; --wt2: #0b0618;
+  --w3: #ff4fa3; --wt3: #0b0618;
+  --w4: #9b5cff; --wt4: #0b0618;
+  --w5: #ff8a3d; --wt5: #0b0618;
+  --w6: #6c8cff; --wt6: #0b0618;
+  --w7: #c6ff4d; --wt7: #0b0618;
+  --w8: #ff6b6b; --wt8: #0b0618;
+  --w9: #e0d4ff; --wt9: #0b0618;
+}
+
+[data-theme='light26'] {
+  color-scheme: light;
+  --bg: #f0eee9;
+  --glow: #dcedea;
+  --backdrop: #e2dfd7;
+  --surface: #ffffff;
+  --text: #10302f;
+  --muted: #55706d;
+  --ink: #10302f;
+  --divider: rgb(16 48 47 / 0.08);
+  --off: #e3e0d8;
+  --off-text: #5f6e6c;
+  --primary: #0f6b6c;
+  --on-primary: #ffffff;
+  --primary-strong: #0f6b6c;
+  --on-primary-strong: #ffffff;
+  --toggle-on: #0f6b6c;
+  --toggle-off: #d3d0c8;
+  --error: #d9472b;
+
+  --truth: #0f6b6c;
+  --on-truth: #ffffff;
+  --dare: #ff7a59;
+  --on-dare: #10302f;
+  --drink: #ffc94a;
+  --on-drink: #10302f;
+  --ok: #8bd17c;
+  --on-ok: #10302f;
+
+  --card: #ffffff;
+  --card-text: #10302f;
+  --truth-ink: #0f6b6c;
+  --dare-ink: #c7432a;
+  --drink-ink: #7a5300;
+  --back: #0f6b6c;
+  --back-on: #ffffff;
+  --back-stripe: rgb(255 255 255 / 0.12);
+
+  --w0: #0f6b6c; --wt0: #ffffff;
+  --w1: #ffc94a; --wt1: #10302f;
+  --w2: #8bd17c; --wt2: #10302f;
+  --w3: #ff7a59; --wt3: #10302f;
+  --w4: #b9a7f5; --wt4: #10302f;
+  --w5: #7ec8e3; --wt5: #10302f;
+  --w6: #f28db2; --wt6: #10302f;
+  --w7: #5b3e8a; --wt7: #ffffff;
+  --w8: #b5522e; --wt8: #ffffff;
+  --w9: #c8d86a; --wt9: #10302f;
+}
+
+[data-theme='light27'] {
+  color-scheme: light;
+  --bg: #eef3ff;
+  --glow: #d3e1ff;
+  --backdrop: #dce5f8;
+  --surface: #ffffff;
+  --text: #0b1b3f;
+  --muted: #4a5a80;
+  --ink: #0b1b3f;
+  --divider: rgb(11 27 63 / 0.08);
+  --off: #dce4f7;
+  --off-text: #56658a;
+  --primary: #3d7bff;
+  --on-primary: #ffffff;
+  --primary-strong: #2f6bf0;
+  --on-primary-strong: #ffffff;
+  --toggle-on: #3d7bff;
+  --toggle-off: #cbd5ec;
+  --error: #c21f72;
+
+  --truth: #3d7bff;
+  --on-truth: #ffffff;
+  --dare: #ff6fb5;
+  --on-dare: #0b1b3f;
+  --drink: #e4ff5c;
+  --on-drink: #0b1b3f;
+  --ok: #5be3b0;
+  --on-ok: #0b1b3f;
+
+  --card: #ffffff;
+  --card-text: #0b1b3f;
+  --truth-ink: #2457e0;
+  --dare-ink: #c21f72;
+  --drink-ink: #4f5e00;
+  --back: #3d7bff;
+  --back-on: #ffffff;
+  --back-stripe: rgb(255 255 255 / 0.14);
+
+  --w0: #2f6bf0; --wt0: #ffffff;
+  --w1: #e4ff5c; --wt1: #0b1b3f;
+  --w2: #5be3b0; --wt2: #0b1b3f;
+  --w3: #ff6fb5; --wt3: #0b1b3f;
+  --w4: #7a4dff; --wt4: #ffffff;
+  --w5: #ff9a3d; --wt5: #0b1b3f;
+  --w6: #3dd5ff; --wt6: #0b1b3f;
+  --w7: #c21f72; --wt7: #ffffff;
+  --w8: #c9b8ff; --wt8: #0b1b3f;
+  --w9: #ff7a6b; --wt9: #0b1b3f;
+}
+
+/* Dùng chung cho mọi theme */
+:root {
+  --font-display-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-body-family: 'Be Vietnam Pro', ui-sans-serif, system-ui, sans-serif;
+
+  --lip: inset 0 -5px 0 rgb(0 0 0 / 0.18);
+  --pressed: inset 0 4px 0 rgb(0 0 0 / 0.18);
+
+  --frame-width: 390px;
+  --page-x: 20px;
+  /* Design để 52px vì tính cả status bar. Trên web status bar nằm ngoài trang,
+     nên chỉ cộng safe-area (PWA / iPhone tai thỏ) + khoảng thở. */
+  --page-top: max(calc(env(safe-area-inset-top) + 8px), 20px);
+  --page-bottom: max(env(safe-area-inset-bottom), 24px);
+
+  --bottle-glass: #c9f4e4;
+  --bottle-cork: #b5733f;
+  --beer: #f5a623;
+  --highlight: #ffffff;
+}

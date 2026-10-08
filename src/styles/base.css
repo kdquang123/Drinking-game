@@ -1,0 +1,55 @@
+@layer base {
+  html {
+    background-color: var(--backdrop);
+    color: var(--text);
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  a,
+  button:not(:disabled),
+  [role='button'],
+  [role='radio'] {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+  }
+}
+
+/* Khung app: luôn rộng 390px như design, co theo màn hình khi máy hẹp hơn. */
+.app-frame {
+  position: relative;
+  width: 100%;
+  max-width: var(--frame-width);
+  min-height: 100dvh;
+  margin-inline: auto;
+  overflow-x: clip;
+  background:
+    radial-gradient(110% 55% at 50% 0%, var(--glow), transparent),
+    var(--bg);
+}
+
+/* Bật trong ~300ms mỗi lần đổi theme (ThemeService), không ảnh hưởng hiệu năng lúc thường. */
+html.theme-switching,
+html.theme-switching * {
+  transition:
+    background-color 300ms ease,
+    color 300ms ease,
+    fill 300ms ease,
+    stroke 300ms ease,
+    box-shadow 300ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching,
+  html.theme-switching * {
+    transition: none !important;
+  }
+}
