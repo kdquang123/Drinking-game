@@ -1,0 +1,12 @@
+<main class="flex h-dvh flex-col px-(--page-x) pt-(--page-top) pb-(--page-bottom)">
+  <header class="flex shrink-0 h-12 items-center gap-3 justify-between">
+    <div class="basis-0 flex-1">
+      <a routerLink="/" appIconButton aria-label="Về trang chủ">
+        <app-icon name="chevron-left" [size]="24" [strokeWidth]="2.6" />
+      </a>
+    </div>
+    <h1 class="type-display-m text-text uppercase text-center">{{ title() }}</h1>
+    <div class="basis-0 flex-1"></div>
+  </header>
+  <router-outlet />
+</main>

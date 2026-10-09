@@ -31,9 +31,7 @@
   min-height: 100dvh;
   margin-inline: auto;
   overflow-x: clip;
-  background:
-    radial-gradient(110% 55% at 50% 0%, var(--glow), transparent),
-    var(--bg);
+  background: var(--bg);
 }
 
 /* Bật trong ~300ms mỗi lần đổi theme (ThemeService), không ảnh hưởng hiệu năng lúc thường. */
