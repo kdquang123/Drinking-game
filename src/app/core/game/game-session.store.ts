@@ -32,6 +32,11 @@ export class GameSessionStore {
   readonly players = this.playerList.asReadonly();
   readonly hasEnoughPlayers = computed(() => this.playerList().length >= MIN_PLAYERS);
   readonly isFull = computed(() => this.playerList().length >= MAX_PLAYERS);
+  readonly round = signal(1);
+
+  readonly currentRoundPlayers = signal<Player[]>([...this.players()]);
+  readonly playedPlayers = signal<Player[]>([]);
+  readonly selectedPlayer = signal<Player | null>(null);
 
   constructor() {
     effect(() => {
@@ -90,7 +95,10 @@ export class GameSessionStore {
 
 function createId(): string {
   // randomUUID chỉ có trong secure context; khi test qua IP LAN bằng http thì không có.
-  return globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  );
 }
 
 function isGameSession(value: unknown): value is GameSession {

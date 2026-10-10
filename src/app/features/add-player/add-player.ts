@@ -5,9 +5,10 @@ import { GameSessionStore } from '../../core/game/game-session.store';
 import { FormsModule } from '@angular/forms';
 import { Button } from '../../shared/ui/button';
 import { Avatar } from '../../shared/ui/avatar';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [Icon, IconButton, FormsModule, Button, Avatar],
+  imports: [Icon, IconButton, FormsModule, Button, Avatar, RouterLink],
   selector: 'app-add-player',
   styleUrl: './add-player.css',
   templateUrl: './add-player.html',
@@ -22,6 +23,11 @@ export class AddPlayer {
 
   errorText = signal('');
   readonly listPlayer = computed(() => this.gameStore.players());
+
+  protected readonly startLink = computed(() => {
+    if (this.gameStore.mode() === 'lat-the') return '/lat-the';
+    return this.gameStore.hasEnoughPlayers() ? '/quay-chai' : '/nguoi-choi';
+  });
 
   addPlayer() {
     const value = this.playerName.trim();
@@ -44,6 +50,10 @@ export class AddPlayer {
     }
     if (this.listPlayer().some((p) => p.name === value)) {
       this.errorText.set(`Tên “${value}” đã có rồi, thêm họ hoặc biệt danh nhé`);
+      return false;
+    }
+    if (value.length > 12) {
+      this.errorText.set(`Tên không được dài quá 12 kí tự`);
       return false;
     }
     this.errorText.set('');

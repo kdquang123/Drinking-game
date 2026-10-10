@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
 import { SettingLayout } from './layouts/setting-layout/setting-layout';
+import { PlayLayout } from './layouts/play-layout/play-layout';
 
 const placeholder = () => import('./features/placeholder/placeholder').then((m) => m.Placeholder);
 
@@ -24,9 +25,15 @@ export const routes: Routes = [
     title: 'Người chơi',
   },
   {
-    path: 'quay-chai',
-    loadComponent: placeholder,
-    data: { title: 'Quay chai' },
+    path: '',
+    component: PlayLayout,
+    children: [
+      {
+        path: 'quay-chai',
+        loadComponent: () => import('./features/random-wheel/random-wheel').then((m) => m.RandomWheel),
+      },
+    ],
+    data: { title: 'Quay chai', mode: 'random-wheel' },
     title: 'Quay chai',
   },
   { path: 'lat-the', loadComponent: placeholder, data: { title: 'Lật thẻ' }, title: 'Lật thẻ' },

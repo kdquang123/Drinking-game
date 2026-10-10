@@ -7,6 +7,7 @@
         #playerInput
         class="flex-1 outline-0 bg-surface! px-4.5 py-4 rounded-m"
         [(ngModel)]="playerName"
+        maxlength="12"
         placeholder="VD: Minh"
         (blur)="playerName = playerName.trim()"
         (keydown.enter)="addPlayer()"
@@ -47,7 +48,12 @@
   @if (listPlayer().length === 0) {
     <p class="type-caption mb-2 text-center text-muted">Cần thêm một người nữa để bắt đầu</p>
   }
-  <a [ariaDisabled]="listPlayer().length === 0" appButton class="bg-drink! text-text!">
+  <a
+    [ariaDisabled]="listPlayer().length === 0"
+    appButton
+    [routerLink]="startLink()"
+    class="bg-drink! text-text!"
+  >
     Bắt đầu chơi
   </a>
 </div>
