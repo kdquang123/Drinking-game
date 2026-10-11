@@ -1,0 +1,17 @@
+<div
+  class="scene"
+  (click)="toggle()"
+  (keydown.enter)="toggle()"
+  (keydown.space)="$event.preventDefault(); toggle()"
+>
+  <div class="card" [class.flipped]="flipped()">
+    <!-- Mặt sau -->
+    <div class="face back">
+      <span class="pill-top">Thật · Thách · Uống</span>
+      <div class="question">?</div>
+      <span class="pill-bottom">Chạm để lật</span>
+    </div>
+    <!-- Mặt trước -->
+    <div class="face front">Mặt trước</div>
+  </div>
+</div>

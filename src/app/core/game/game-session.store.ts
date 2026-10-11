@@ -34,7 +34,7 @@ export class GameSessionStore {
   readonly isFull = computed(() => this.playerList().length >= MAX_PLAYERS);
   readonly round = signal(1);
 
-  readonly currentRoundPlayers = signal<Player[]>([...this.players()]);
+  readonly currentRoundPlayers = signal<Player[]>([]);
   readonly playedPlayers = signal<Player[]>([]);
   readonly selectedPlayer = signal<Player | null>(null);
 
@@ -56,6 +56,13 @@ export class GameSessionStore {
       };
       this.storage.write(STORAGE_KEYS.session, session);
     });
+  }
+
+  initGame() {
+    this.round.set(1);
+    this.playedPlayers.set([]);
+    this.currentRoundPlayers.set([...this.players()]);
+    this.selectedPlayer.set(null);
   }
 
   /** Thêm người chơi với slot màu nhỏ nhất còn trống. Trả về null nếu đã đủ người. */

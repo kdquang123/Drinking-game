@@ -17,7 +17,7 @@
   <symbol id="arrow-right" viewBox="0 0 24 24">
     <path d="M5 12h14M13 6l6 6-6 6" />
   </symbol>
-  <symbol id="plus">
+  <symbol id="plus" viewBox="0 0 24 24">
     <path d="M12 5v14M5 12h14" />
   </symbol>
   <symbol id="mask-icon" viewBox="0 0 20 20">

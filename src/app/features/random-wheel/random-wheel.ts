@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   OnDestroy,
+  OnInit,
   signal,
 } from '@angular/core';
 import { GameSessionStore } from '../../core/game/game-session.store';
@@ -29,7 +30,7 @@ const point = (r: number, deg: number) => {
   templateUrl: './random-wheel.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RandomWheel implements OnDestroy {
+export class RandomWheel implements OnInit, OnDestroy {
   private readonly gameStore = inject(GameSessionStore);
   private router = inject(Router);
   PIN_COUNT = 12;
@@ -113,6 +114,10 @@ export class RandomWheel implements OnDestroy {
     //     );
     //   }
     // });
+  }
+
+  ngOnInit(): void {
+    this.gameStore.initGame();
   }
 
   ngOnDestroy(): void {

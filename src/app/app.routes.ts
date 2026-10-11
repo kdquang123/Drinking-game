@@ -25,17 +25,29 @@ export const routes: Routes = [
     title: 'Người chơi',
   },
   {
-    path: '',
+    path: 'quay-chai',
     component: PlayLayout,
     children: [
       {
-        path: 'quay-chai',
-        loadComponent: () => import('./features/random-wheel/random-wheel').then((m) => m.RandomWheel),
+        path: '',
+        loadComponent: () =>
+          import('./features/random-wheel/random-wheel').then((m) => m.RandomWheel),
       },
     ],
     data: { title: 'Quay chai', mode: 'random-wheel' },
     title: 'Quay chai',
   },
-  { path: 'lat-the', loadComponent: placeholder, data: { title: 'Lật thẻ' }, title: 'Lật thẻ' },
+  {
+    path: 'lat-the',
+    component: PlayLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/card-flip/card-flip').then((m) => m.CardFlip),
+      },
+    ],
+    data: { title: 'Lật thẻ' },
+    title: 'Lật thẻ',
+  },
   { path: '**', redirectTo: '' },
 ];
