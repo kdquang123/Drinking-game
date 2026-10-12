@@ -46,7 +46,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/card-flip/card-flip').then((m) => m.CardFlip),
       },
     ],
-    data: { title: 'Lật thẻ' },
+    data: { title: 'Lật thẻ', mode: 'card-flip' },
     title: 'Lật thẻ',
   },
   { path: '**', redirectTo: '' },

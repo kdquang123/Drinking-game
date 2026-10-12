@@ -12,6 +12,30 @@
       <span class="pill-bottom">Chạm để lật</span>
     </div>
     <!-- Mặt trước -->
-    <div class="face front">Mặt trước</div>
+    <div class="face front">
+      <div class="tags">
+        <span class="tag" [class]="`bg-${color()} text-on-${color()}`">{{ cardKindText() }}</span>
+        <span class="tag bg-[#00000012] text-ink">{{ cardLevelText() }}</span>
+        <span class="num">#{{ card().id }}</span>
+      </div>
+
+      <div class="art">
+        <app-card-illo
+          class="rounded-[3cqw]"
+          [illo]="card().illo"
+          [kind]="card().kind"
+        ></app-card-illo>
+      </div>
+
+      <p class="text">
+        <span>{{ card()?.pre }}</span>
+        <span [class]="`text-${color()}`">{{ card()?.hl }}</span>
+        <span>{{ card()?.post }}</span>
+      </p>
+
+      <div class="action" [class]="`bg-${card()?.kind === 'drink' ? 'dare' : 'drink'}`">
+        {{ cardActionText() }}
+      </div>
+    </div>
   </div>
 </div>

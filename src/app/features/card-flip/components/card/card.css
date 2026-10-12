@@ -1,12 +1,13 @@
 :host {
-  display: block;
-  width: 100%;
-  max-width: 330px;
-  margin: 0px auto;
+  display: flex;
+  justify-content: center;
+  flex: 0 1 calc(min(330px, 100cqw) * 46 / 33);
+  min-height: 0;
 }
 
 .scene {
   container-type: inline-size;
+  height: 100%;
   perspective: 1200px;
   aspect-ratio: 33 / 46;
   cursor: pointer;
@@ -49,6 +50,7 @@
 
 .front {
   transform: rotateY(180deg);
+  background-color: var(--card);
 }
 
 .back {
@@ -85,6 +87,57 @@
   color: var(--text);
   font-size: 24cqw;
   font-weight: 700;
+}
+
+/* ---- Mặt trước ---- */
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  z-index: 1;
+}
+.tag {
+  font-weight: 700;
+  font-size: 3cqw;
+  padding: 2cqw 3.6cqw;
+  border-radius: 3cqw;
+  text-transform: uppercase;
+}
+
+.num {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 3.6cqw;
+  color: #6b7f7d;
+}
+
+.art {
+  margin-top: 2cqw;
+  aspect-ratio: 2 / 1;
+}
+
+.text {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font-weight: 800;
+  font-size: 5.3cqw;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--ink);
+  z-index: 1;
+}
+
+.action {
+  z-index: 1;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 4cqw;
+  text-transform: uppercase;
+  padding: 4cqw;
+  border-radius: 3.6cqw;
 }
 
 @media (prefers-reduced-motion: reduce) {

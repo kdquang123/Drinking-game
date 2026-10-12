@@ -11,7 +11,6 @@ import { GameSessionStore } from '../../core/game/game-session.store';
 import { Button } from '../../shared/ui/button';
 import { Icon } from '../../shared/ui/icon';
 import { IconButton } from '../../shared/ui/icon-button';
-import { Player } from '../../core/game/game.model';
 import { Router } from '@angular/router';
 
 const C = 165; // tâm

@@ -12,4 +12,5 @@ export const ICON_REGISTRY: Record<string, string> = {
   adjust: 'assets/icons/common.svg#adjust',
   book: 'assets/icons/common.svg#book',
   dice: 'assets/icons/common.svg#dice',
+  shuffle: 'assets/icons/common.svg#shuffle',
 };

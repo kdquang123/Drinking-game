@@ -26,7 +26,7 @@ export class GameSessionStore {
   private readonly restored = this.restore();
 
   readonly mode = signal<PlayMode>(this.restored?.mode ?? 'quay-chai');
-  readonly level = signal<Level>(this.restored?.level ?? 'vua');
+  readonly level = signal<Level>(this.restored?.level ?? Level.MEDIUM);
 
   private readonly playerList = signal<readonly Player[]>(this.restored?.players ?? []);
   readonly players = this.playerList.asReadonly();
@@ -115,7 +115,7 @@ function isGameSession(value: unknown): value is GameSession {
     s.version === 1 &&
     typeof s.savedAt === 'number' &&
     (s.mode === 'quay-chai' || s.mode === 'lat-the') &&
-    (s.level === 'nhe' || s.level === 'vua' || s.level === 'nang') &&
+    (s.level === Level.EASY || s.level === Level.MEDIUM || s.level === Level.HARD) &&
     Array.isArray(s.players) &&
     s.players.every(
       (p) =>
