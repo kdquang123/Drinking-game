@@ -1,0 +1,304 @@
+@if (exhaustedKind(); as kind) {
+  <app-empty-card
+    class="mt-5"
+    [kind]="kind"
+    [level]="level()"
+    [total]="exhaustedTotal()"
+    [playerName]="selectedPlayer()?.name"
+  ></app-empty-card>
+  @if (canSwitchKind()) {
+    <button
+      appButton
+      class="mt-6"
+      [variant]="otherKind() === CardKind.DARE ? 'dare' : 'truth'"
+      (click)="switchKind()"
+    >
+      Chuyển sang {{ otherKind() === CardKind.DARE ? 'Thách' : 'Thật' }}
+    </button>
+  }
+  <button
+    class="w-full flex gap-3 items-center justify-center bg-surface text-text type-action py-4 px-4 rounded-l mt-3"
+    (click)="reshuffle()"
+  >
+    <app-icon name="shuffle" [size]="20"></app-icon>
+    <span class="font-bold">Trộn lại câu đã chơi</span>
+  </button>
+  <button
+    class="w-full flex items-center justify-center bg-surface text-text type-action py-4 px-4 rounded-l mt-3"
+    (click)="changeLevel()"
+  >
+    <span class="font-bold">Đổi sang mức {{ nextLevelLabel() }}</span>
+  </button>
+  <button
+    class="mx-auto flex gap-3 items-center justify-center text-text type-action py-3 px-4 mt-3"
+    (click)="addGroupQuestions()"
+  >
+    <app-icon name="plus" [size]="20"></app-icon>
+    <span class="font-bold">Thêm câu hỏi của nhóm</span>
+  </button>
+} @else if (currentCard()) {
+  <app-card class="mt-5 min-h-0 shrink" [card]="currentCard()!" [flipped]="true"></app-card>
+  <button appButton class="bg-ok! mt-4" (click)="nextTurn()">Hoàn thành</button>
+  <button appButton class="bg-surface! mt-3 type-body-m! text-text" (click)="nextTurn()">
+    Bỏ qua
+    <span class="bg-dare rounded-s px-2 py-1 text-xs">uống {{ currentCard()?.level }} ngụm</span>
+  </button>
+} @else {
+  @if (selectedPlayer()) {
+    <div class="flex flex-col items-center py-2">
+      <p class="type-body-m text-muted">CHAI ĐÃ CHỈ VÀO</p>
+      <div
+        class="inline-block min-w-36 max-w-[80%] truncate text-center bg-truth px-2 type-display-xl rounded-m text-ink"
+      >
+        {{ selectedPlayer()?.name }}
+      </div>
+    </div>
+  } @else {
+    <!-- <div class="flex justify-center">
+      <span class="rounded-full bg-surface type-body-s text-muted px-2 py-1 mt-4"
+        >Vòng {{ round() }} · còn {{ currentRoundPlayers().length }}/{{
+          players().length
+        }}
+        người</span
+      >
+    </div> -->
+    <p class="text-center type-display-l mt-3">{{ statusText().title }}</p>
+  }
+  <div class="flex justify-center min-h-0 grow-0 shrink basis-[min(22.5rem,90cqw)]">
+    <div class="relative aspect-square h-full">
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 330 330"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <mask
+          id="mask0_12_4190"
+          style="mask-type: luminance"
+          maskUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+          width="330"
+          height="330"
+        >
+          <path d="M330 0H0V330H330V0Z" fill="white" />
+        </mask>
+        <g mask="url(#mask0_12_4190)">
+          <path
+            d="M165 324.5C253.089 324.5 324.5 253.089 324.5 165C324.5 76.9106 253.089 5.5 165 5.5C76.9106 5.5 5.5 76.9106 5.5 165C5.5 253.089 76.9106 324.5 165 324.5Z"
+            [attr.fill]="'var(--surface)'"
+            stroke-width="4.4"
+            [attr.stroke]="'var(--ink)'"
+          />
+          <!-- Pin -->
+          <path
+            d="M203.39 25.96C205.82 25.96 207.79 23.9901 207.79 21.56C207.79 19.13 205.82 17.16 203.39 17.16C200.96 17.16 198.99 19.13 198.99 21.56C198.99 23.9901 200.96 25.96 203.39 25.96Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M270.05 64.35C272.48 64.35 274.45 62.3801 274.45 59.95C274.45 57.52 272.48 55.55 270.05 55.55C267.62 55.55 265.65 57.52 265.65 59.95C265.65 62.3801 267.62 64.35 270.05 64.35Z"
+            fill="#FFF6E5"
+          />
+          <path
+            d="M308.44 131.01C310.87 131.01 312.84 129.04 312.84 126.61C312.84 124.18 310.87 122.21 308.44 122.21C306.01 122.21 304.04 124.18 304.04 126.61C304.04 129.04 306.01 131.01 308.44 131.01Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M308.44 207.79C310.87 207.79 312.84 205.82 312.84 203.39C312.84 200.96 310.87 198.99 308.44 198.99C306.01 198.99 304.04 200.96 304.04 203.39C304.04 205.82 306.01 207.79 308.44 207.79Z"
+            fill="#FFF6E5"
+          />
+          <path
+            d="M270.05 274.45C272.48 274.45 274.45 272.48 274.45 270.05C274.45 267.62 272.48 265.65 270.05 265.65C267.62 265.65 265.65 267.62 265.65 270.05C265.65 272.48 267.62 274.45 270.05 274.45Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M203.39 312.84C205.82 312.84 207.79 310.87 207.79 308.44C207.79 306.01 205.82 304.04 203.39 304.04C200.96 304.04 198.99 306.01 198.99 308.44C198.99 310.87 200.96 312.84 203.39 312.84Z"
+            fill="#FFF6E5"
+          />
+          <path
+            d="M126.61 312.84C129.04 312.84 131.01 310.87 131.01 308.44C131.01 306.01 129.04 304.04 126.61 304.04C124.18 304.04 122.21 306.01 122.21 308.44C122.21 310.87 124.18 312.84 126.61 312.84Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M59.95 274.45C62.3801 274.45 64.35 272.48 64.35 270.05C64.35 267.62 62.3801 265.65 59.95 265.65C57.52 265.65 55.55 267.62 55.55 270.05C55.55 272.48 57.52 274.45 59.95 274.45Z"
+            fill="#FFF6E5"
+          />
+          <path
+            d="M21.56 207.79C23.9901 207.79 25.96 205.82 25.96 203.39C25.96 200.96 23.9901 198.99 21.56 198.99C19.13 198.99 17.16 200.96 17.16 203.39C17.16 205.82 19.13 207.79 21.56 207.79Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M21.56 131.01C23.9901 131.01 25.96 129.04 25.96 126.61C25.96 124.18 23.9901 122.21 21.56 122.21C19.13 122.21 17.16 124.18 17.16 126.61C17.16 129.04 19.13 131.01 21.56 131.01Z"
+            fill="#FFF6E5"
+          />
+          <path
+            d="M59.95 64.35C62.3801 64.35 64.35 62.3801 64.35 59.95C64.35 57.52 62.3801 55.55 59.95 55.55C57.52 55.55 55.55 57.52 55.55 59.95C55.55 62.3801 57.52 64.35 59.95 64.35Z"
+            fill="#FFD23F"
+          />
+          <path
+            d="M126.61 25.96C129.04 25.96 131.01 23.9901 131.01 21.56C131.01 19.13 129.04 17.16 126.61 17.16C124.18 17.16 122.21 19.13 122.21 21.56C122.21 23.9901 124.18 25.96 126.61 25.96Z"
+            fill="#FFF6E5"
+          />
+          <!-- Split -->
+          @for (s of slices(); track s.id) {
+            <path
+              [attr.d]="s.d"
+              [attr.fill]="
+                selectedPlayer()
+                  ? selectedPlayer()?.id === s.id
+                    ? 'var(--truth)'
+                    : 'var(--off)'
+                  : 'var(--w' + s.slot + ')'
+              "
+              [attr.stroke-width]="selectedPlayer()?.id === s.id ? 8 : 3.3"
+              stroke-linejoin="round"
+              [attr.stroke]="'var(--ink)'"
+            />
+            <text
+              [attr.x]="s.tx"
+              [attr.y]="s.ty"
+              [attr.transform]="'rotate(' + s.textRotate + ' ' + s.tx + ' ' + s.ty + ')'"
+              text-anchor="middle"
+              dominant-baseline="central"
+              font-size="19"
+              font-weight="700"
+              [attr.fill]="
+                selectedPlayer()?.id === s.id || !selectedPlayer()
+                  ? 'var(--ink)'
+                  : 'var(--off-text)'
+              "
+            >
+              {{ s.label }}
+            </text>
+          }
+        </g>
+      </svg>
+      <!-- Chai ở giữa -->
+      <div
+        class="absolute left-1/2 top-1/2 h-[65%] w-[23%] text-white drop-shadow"
+        [style.transform]="'translate(-50%, -50%) rotate(' + rotation() + 'deg)'"
+        [style.transition]="
+          spinning() ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none'
+        "
+        aria-label="Quay chai"
+        (transitionend)="onEnd($event)"
+      >
+        <span class="bottle-shake block size-full" [class.shaking]="charging()">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 87 150"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g transform="rotate(18.8 44 75)">
+              <path
+                d="M16.1662 19.366L28.5701 14.8513L38.3519 41.7266C42.1141 52.0632 56.7754 53.7505 62.0425 68.2218L83.1109 126.107C85.6191 132.998 83.4276 137.698 76.5365 140.206L59.9979 146.225C53.1068 148.733 48.4072 146.542 45.8991 139.651L24.8306 81.7658C19.5635 67.2945 29.7101 56.5778 25.9479 46.2412L16.1662 19.366Z"
+                fill="#C9F4E4"
+                stroke-width="3.85"
+                stroke-linejoin="round"
+                stroke="#0B0618"
+              />
+              <path
+                d="M34.4224 101.686L67.4996 89.6473L81.0435 126.859C83.0501 132.372 81.2969 136.132 75.784 138.138L59.2454 144.158C53.7326 146.164 49.9729 144.411 47.9664 138.898L34.4224 101.686Z"
+                fill="#FFD23F"
+                stroke-width="2.75"
+                stroke-linejoin="round"
+                stroke="#0B0618"
+              />
+              <path
+                d="M35.1654 71.5659C34.6459 70.1387 33.0679 69.4028 31.6407 69.9223C30.2135 70.4417 29.4776 72.0198 29.9971 73.447L36.3928 91.0193C36.9123 92.4464 38.4904 93.1823 39.9176 92.6629C41.3447 92.1434 42.0806 90.5653 41.5612 89.1381L35.1654 71.5659Z"
+                fill="white"
+              />
+              <path
+                d="M23.7743 4.8909L13.4377 8.65312C11.725 9.27646 10.842 11.1701 11.4653 12.8828L13.7227 19.0847C14.346 20.7974 16.2397 21.6804 17.9523 21.0571L28.2889 17.2948C30.0016 16.6715 30.8846 14.7778 30.2613 13.0652L28.0039 6.86322C27.3806 5.15059 25.4869 4.26755 23.7743 4.8909Z"
+                fill="#B5733F"
+                stroke-width="3.3"
+                stroke="#0B0618"
+              />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+  @if (selectedPlayer()) {
+    <p class="text-center type-card-body mt-5">{{ selectedPlayer()?.name }} chọn Thật hay Thách</p>
+    <div class="w-4/5 max-w-80 mx-auto flex gap-4 mt-2">
+      <button appButton class="flex-1 bg-truth" (click)="selectCard(CardKind.TRUTH)">THẬT</button>
+      <button appButton class="flex-1 bg-dare!" (click)="selectCard(CardKind.DARE)">THÁCH</button>
+    </div>
+    <button
+      class="w-3/4 max-w-56 mx-auto flex gap-2 items-center justify-center bg-surface type-action py-3 px-4 rounded-m mt-3.5"
+      (click)="randomSelectCard()"
+    >
+      <app-icon name="dice" [size]="20"></app-icon
+      ><span class="font-bold">Ngẫu nhiên giúp mình</span>
+    </button>
+  } @else {
+    @if (playedPlayers().length) {
+      <!-- Đã chơi -->
+      <div class="w-3/5 mx-auto flex flex-wrap justify-center gap-1 mt-2.5">
+        <span class="type-caption text-muted">Đã chơi:</span>
+        @for (p of playedPlayers(); track p.id) {
+          <span class="type-caption text-muted rounded-full px-2 bg-surface">{{ p.name }}</span>
+        }
+      </div>
+    }
+
+    <!-- Thanh lực quay -->
+    <div class="w-4/5 mx-auto mt-4">
+      <div class="flex justify-between type-caption">
+        <span class="text-muted">LỰC QUAY</span>
+        <span
+          >{{ power() * 10 + '' }}% ·
+          {{ power() > 3 ? (power() > 6 ? 'Mạnh' : 'TB') : 'Yếu' }}</span
+        >
+      </div>
+      <div class="h-6 rounded-s flex justify-around gap-1 p-1 bg-surface">
+        @for (n of powerLevels; track n) {
+          <div
+            class="h-full flex-1 rounded-xs transition-colors duration-75"
+            [class]="
+              n <= power() ? (n > 3 ? (n > 6 ? 'bg-error' : 'bg-primary') : 'bg-ok') : 'bg-off'
+            "
+          ></div>
+        }
+      </div>
+    </div>
+    <!-- Nút bấm -->
+    <button
+      appButton
+      class="mt-4 touch-none select-none"
+      [disabled]="spinning()"
+      (pointerdown)="startCharge($event)"
+      (pointerup)="releaseCharge()"
+      (pointercancel)="releaseCharge()"
+      (keydown.space)="$event.preventDefault(); startCharge()"
+      (keyup.space)="releaseCharge()"
+      (contextmenu)="$event.preventDefault()"
+    >
+      {{ statusText().buttonText }}
+    </button>
+    <p class="text-center type-caption text-muted mt-3">{{ statusText().bottomText }}</p>
+    <!-- Bottom actions -->
+    <div class="flex-1 flex items-end">
+      <div class="w-8/10 mx-auto flex flex-wrap justify-around items-stretch">
+        @for (action of bottomActions(); track action.icon) {
+          <div class="w-16 flex flex-col gap-2 items-center">
+            <button
+              appIconButton
+              class="w-12 h-12 bg-surface"
+              title="label"
+              (click)="action.action()"
+            >
+              <app-icon [name]="action.icon"></app-icon>
+            </button>
+            <p class="text-center type-caption text-muted wrap-break-word">{{ action.label }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+}

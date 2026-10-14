@@ -44,10 +44,17 @@
       </div>
     }
   </div>
-  @if (listPlayer().length === 0) {
-    <p class="type-caption mb-2 text-center text-muted">Cần thêm một người nữa để bắt đầu</p>
+  @if (!hasEnoughPlayers()) {
+    <p class="type-caption mb-2 text-center text-muted">
+      Cần thêm {{ minPlayer - listPlayer().length }} người nữa để bắt đầu
+    </p>
   }
-  <a [ariaDisabled]="listPlayer().length === 0" appButton class="bg-drink! text-text!">
+  <a
+    [ariaDisabled]="!hasEnoughPlayers()"
+    appButton
+    [routerLink]="startLink()"
+    [class]="{ 'bg-drink! text-text!': hasEnoughPlayers() }"
+  >
     Bắt đầu chơi
   </a>
 </div>

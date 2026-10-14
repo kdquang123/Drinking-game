@@ -26,12 +26,17 @@ export class GameSessionStore {
   private readonly restored = this.restore();
 
   readonly mode = signal<PlayMode>(this.restored?.mode ?? 'quay-chai');
-  readonly level = signal<Level>(this.restored?.level ?? 'vua');
+  readonly level = signal<Level>(this.restored?.level ?? Level.MEDIUM);
 
   private readonly playerList = signal<readonly Player[]>(this.restored?.players ?? []);
   readonly players = this.playerList.asReadonly();
   readonly hasEnoughPlayers = computed(() => this.playerList().length >= MIN_PLAYERS);
   readonly isFull = computed(() => this.playerList().length >= MAX_PLAYERS);
+  readonly round = signal(1);
+
+  readonly currentRoundPlayers = signal<Player[]>([]);
+  readonly playedPlayers = signal<Player[]>([]);
+  readonly selectedPlayer = signal<Player | null>(null);
 
   constructor() {
     effect(() => {
@@ -51,6 +56,13 @@ export class GameSessionStore {
       };
       this.storage.write(STORAGE_KEYS.session, session);
     });
+  }
+
+  initGame(round: number = 1) {
+    this.round.set(round);
+    this.playedPlayers.set([]);
+    this.currentRoundPlayers.set([...this.players()]);
+    this.selectedPlayer.set(null);
   }
 
   /** Thêm người chơi với slot màu nhỏ nhất còn trống. Trả về null nếu đã đủ người. */
@@ -90,7 +102,10 @@ export class GameSessionStore {
 
 function createId(): string {
   // randomUUID chỉ có trong secure context; khi test qua IP LAN bằng http thì không có.
-  return globalThis.crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+  );
 }
 
 function isGameSession(value: unknown): value is GameSession {
@@ -100,7 +115,7 @@ function isGameSession(value: unknown): value is GameSession {
     s.version === 1 &&
     typeof s.savedAt === 'number' &&
     (s.mode === 'quay-chai' || s.mode === 'lat-the') &&
-    (s.level === 'nhe' || s.level === 'vua' || s.level === 'nang') &&
+    (s.level === Level.EASY || s.level === Level.MEDIUM || s.level === Level.HARD) &&
     Array.isArray(s.players) &&
     s.players.every(
       (p) =>

@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
 import { SettingLayout } from './layouts/setting-layout/setting-layout';
+import { PlayLayout } from './layouts/play-layout/play-layout';
+import { hasPlayersGuard } from './core/game/players.guard';
 
 const placeholder = () => import('./features/placeholder/placeholder').then((m) => m.Placeholder);
 
@@ -25,10 +27,29 @@ export const routes: Routes = [
   },
   {
     path: 'quay-chai',
-    loadComponent: placeholder,
-    data: { title: 'Quay chai' },
+    component: PlayLayout,
+    canActivate: [hasPlayersGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/random-wheel/random-wheel').then((m) => m.RandomWheel),
+      },
+    ],
+    data: { title: 'Quay chai', mode: 'random-wheel' },
     title: 'Quay chai',
   },
-  { path: 'lat-the', loadComponent: placeholder, data: { title: 'Lật thẻ' }, title: 'Lật thẻ' },
+  {
+    path: 'lat-the',
+    component: PlayLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/card-flip/card-flip').then((m) => m.CardFlip),
+      },
+    ],
+    data: { title: 'Lật thẻ', mode: 'card-flip' },
+    title: 'Lật thẻ',
+  },
   { path: '**', redirectTo: '' },
 ];

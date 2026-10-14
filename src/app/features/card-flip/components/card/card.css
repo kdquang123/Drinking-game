@@ -1,0 +1,147 @@
+:host {
+  display: flex;
+  justify-content: center;
+  flex: 0 1 calc(min(330px, 100cqw) * 46 / 33);
+  min-height: 0;
+}
+
+.scene {
+  container-type: inline-size;
+  height: 100%;
+  perspective: 1200px;
+  aspect-ratio: 33 / 46;
+  cursor: pointer;
+  outline-offset: 6px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+
+.card.flipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8.4cqw;
+  border: 1cqw solid var(--ink);
+  border-radius: 6cqw;
+  box-shadow: 1.8cqw 1.8cqw 0 var(--ink);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.face::after {
+  content: '';
+  position: absolute;
+  inset: 3.6cqw;
+  border: 0.5cqw dotted var(--back-on);
+  border-radius: 4.2cqw;
+  pointer-events: none;
+}
+
+.front {
+  transform: rotateY(180deg);
+  background-color: var(--card);
+}
+
+.back {
+  background-color: var(--back);
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ---- Mặt sau ---- */
+.pill-top,
+.pill-bottom {
+  font-weight: 800;
+  text-transform: uppercase;
+  z-index: 1;
+  font-size: 3.6cqw;
+  padding: 2cqw 5cqw;
+  border-radius: 2.4cqw;
+}
+.pill-top {
+  background: #fff;
+  color: var(--ink);
+}
+.pill-bottom {
+  background: var(--ink);
+  color: #fff;
+  font-size: 4.2cqw;
+}
+.question {
+  text-align: center;
+  width: 44cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--drink);
+  color: var(--text);
+  font-size: 24cqw;
+  font-weight: 700;
+}
+
+/* ---- Mặt trước ---- */
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  z-index: 1;
+}
+.tag {
+  font-weight: 700;
+  font-size: 3cqw;
+  padding: 2cqw 3.6cqw;
+  border-radius: 3cqw;
+  text-transform: uppercase;
+}
+
+.num {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 3.6cqw;
+  color: #6b7f7d;
+}
+
+.art {
+  margin-top: 2cqw;
+  aspect-ratio: 2 / 1;
+}
+
+.text {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font-weight: 800;
+  font-size: 5.3cqw;
+  line-height: 1.25;
+  text-transform: uppercase;
+  color: var(--ink);
+  z-index: 1;
+}
+
+.action {
+  z-index: 1;
+  text-align: center;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 4cqw;
+  text-transform: uppercase;
+  padding: 4cqw;
+  border-radius: 3.6cqw;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition-duration: 0.01s;
+  }
+}
