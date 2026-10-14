@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { IconButton } from '../../shared/ui/icon-button';
 import { Segmented } from '../../shared/ui/segmented';
 import { GameSessionStore } from '../../core/game/game-session.store';
+import { ToastService } from '../../shared/ui/toast';
 
 @Component({
   imports: [Icon, RouterOutlet, IconButton, Segmented, RouterLink],
@@ -14,6 +15,7 @@ import { GameSessionStore } from '../../core/game/game-session.store';
 export class PlayLayout {
   private readonly router = inject(Router);
   private readonly gameSession = inject(GameSessionStore);
+  protected readonly toast = inject(ToastService);
 
   readonly title = input.required<string>();
   readonly mode = input<string>('random-wheel');

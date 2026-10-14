@@ -58,8 +58,8 @@ export class GameSessionStore {
     });
   }
 
-  initGame() {
-    this.round.set(1);
+  initGame(round: number = 1) {
+    this.round.set(round);
     this.playedPlayers.set([]);
     this.currentRoundPlayers.set([...this.players()]);
     this.selectedPlayer.set(null);

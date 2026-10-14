@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './features/home/home';
 import { SettingLayout } from './layouts/setting-layout/setting-layout';
 import { PlayLayout } from './layouts/play-layout/play-layout';
+import { hasPlayersGuard } from './core/game/players.guard';
 
 const placeholder = () => import('./features/placeholder/placeholder').then((m) => m.Placeholder);
 
@@ -27,6 +28,7 @@ export const routes: Routes = [
   {
     path: 'quay-chai',
     component: PlayLayout,
+    canActivate: [hasPlayersGuard],
     children: [
       {
         path: '',

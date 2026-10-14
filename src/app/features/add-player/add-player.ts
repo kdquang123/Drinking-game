@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Button } from '../../shared/ui/button';
 import { Avatar } from '../../shared/ui/avatar';
 import { RouterLink } from '@angular/router';
+import { MAX_PLAYERS, MIN_PLAYERS } from '../../core/game/game.model';
 
 @Component({
   imports: [Icon, IconButton, FormsModule, Button, Avatar, RouterLink],
@@ -20,13 +21,15 @@ export class AddPlayer {
   readonly title = input.required<string>();
 
   playerName = '';
+  minPlayer = MIN_PLAYERS;
 
   errorText = signal('');
   readonly listPlayer = computed(() => this.gameStore.players());
+  readonly hasEnoughPlayers = computed(() => this.gameStore.hasEnoughPlayers());
+  readonly isFull = computed(() => this.gameStore.isFull());
 
   protected readonly startLink = computed(() => {
-    if (this.gameStore.mode() === 'lat-the') return '/lat-the';
-    return this.gameStore.hasEnoughPlayers() ? '/quay-chai' : '/nguoi-choi';
+    return this.hasEnoughPlayers() ? '/quay-chai' : '/nguoi-choi';
   });
 
   addPlayer() {
@@ -43,19 +46,26 @@ export class AddPlayer {
   }
 
   private validate(value: string) {
-    if (value.length === 0) return false;
-    if (this.listPlayer().length >= 10) {
-      this.errorText.set('Đã đủ số lượng người chơi');
+    if (value.length === 0) {
+      this.errorText.set('Nhập tên trước đã');
       return false;
     }
+
+    if (value.length > 12) {
+      this.errorText.set('Tên tối đa 12 ký tự');
+      return;
+    }
+
+    if (this.isFull()) {
+      this.errorText.set(`Đã đủ ${MAX_PLAYERS} người chơi`);
+      return false;
+    }
+
     if (this.listPlayer().some((p) => p.name === value)) {
       this.errorText.set(`Tên “${value}” đã có rồi, thêm họ hoặc biệt danh nhé`);
       return false;
     }
-    if (value.length > 12) {
-      this.errorText.set(`Tên không được dài quá 12 kí tự`);
-      return false;
-    }
+
     this.errorText.set('');
     return true;
   }

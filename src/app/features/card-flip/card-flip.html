@@ -1,36 +1,60 @@
 <div class="block w-fit mx-auto mt-4 px-2 py-1 bg-surface rounded-full type-caption text-muted">
-  Đã rút {{ deck().length - useDeck().length }} · còn {{ useDeck().length }} thẻ
+  Đã rút {{ drawnCount() }} · còn {{ remaining() }} thẻ
 </div>
-<p class="text-center type-display-l my-3">{{ titleText() }}</p>
-<app-card
-  class="min-h-0 shrink"
-  [card]="current()"
-  [flipped]="flipped()"
-  (toggleCard)="next()"
-></app-card>
-<p class="text-center type-caption text-muted mt-3.5">
-  {{ flipped() ? 'Chạm lần nữa để úp lại' : 'Chạm vào thẻ để lật' }}
-</p>
-<div class="flex-1 flex items-end">
-  <div class="w-full flex items-center justify-between">
-    <div class="flex gap-1.5">
-      <div class="flex gap-1">
-        <div class="w-3 h-3 bg-truth rounded-xs"></div>
-        <span class="type-caption text-muted">Thật</span>
+@if (finished()) {
+  <app-empty-card class="mt-5" [level]="level()" [total]="deck().length"></app-empty-card>
+  <button appButton class="mt-6" (click)="shuffle()">
+    <app-icon name="shuffle" [size]="22"></app-icon>
+    Xáo lại bộ bài
+  </button>
+  <button
+    class="w-full flex items-center justify-center bg-surface text-text type-action py-4 px-4 rounded-l mt-3"
+    (click)="changeLevel()"
+  >
+    <span class="font-bold">Đổi sang mức {{ nextLevelLabel() }}</span>
+  </button>
+  <button
+    class="mx-auto flex gap-3 items-center justify-center text-text type-action py-3 px-4 mt-3"
+    (click)="addGroupQuestions()"
+  >
+    <app-icon name="plus" [size]="20"></app-icon>
+    <span class="font-bold">Thêm câu hỏi của nhóm</span>
+  </button>
+} @else {
+  <p class="text-center type-display-l my-3">{{ titleText() }}</p>
+  <app-card
+    class="min-h-0 shrink"
+    [card]="current()"
+    [flipped]="flipped()"
+    (toggleCard)="next()"
+  ></app-card>
+  <p class="text-center type-caption text-muted mt-3.5">
+    {{ flipped() ? 'Chạm lần nữa để úp lại' : 'Chạm vào thẻ để lật' }}
+  </p>
+  <div class="flex-1 flex items-end">
+    <div class="w-full flex items-center justify-between">
+      <div class="flex gap-1.5">
+        <div class="flex gap-1">
+          <div class="w-3 h-3 bg-truth rounded-xs"></div>
+          <span class="type-caption text-muted">Thật</span>
+        </div>
+        <div class="flex gap-1">
+          <div class="w-3 h-3 bg-dare rounded-xs"></div>
+          <span class="type-caption text-muted">Thách</span>
+        </div>
+        <div class="flex gap-1">
+          <div class="w-3 h-3 bg-drink rounded-xs"></div>
+          <span class="type-caption text-muted">Uống</span>
+        </div>
       </div>
-      <div class="flex gap-1">
-        <div class="w-3 h-3 bg-dare rounded-xs"></div>
-        <span class="type-caption text-muted">Thách</span>
-      </div>
-      <div class="flex gap-1">
-        <div class="w-3 h-3 bg-drink rounded-xs"></div>
-        <span class="type-caption text-muted">Uống</span>
-      </div>
-    </div>
 
-    <button class="flex items-center gap-2 px-3 py-2 bg-surface rounded-m text-ink">
-      <app-icon name="shuffle" size="18"></app-icon>
-      <span>Xáo lại bộ bài</span>
-    </button>
+      <button
+        class="flex items-center gap-2 px-3 py-2 bg-surface rounded-m text-ink"
+        (click)="shuffle()"
+      >
+        <app-icon name="shuffle" size="18"></app-icon>
+        <span>Xáo lại bộ bài</span>
+      </button>
+    </div>
   </div>
-</div>
+}

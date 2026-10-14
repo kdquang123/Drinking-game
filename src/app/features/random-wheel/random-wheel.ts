@@ -11,7 +11,12 @@ import { GameSessionStore } from '../../core/game/game-session.store';
 import { Button } from '../../shared/ui/button';
 import { Icon } from '../../shared/ui/icon';
 import { IconButton } from '../../shared/ui/icon-button';
+import { ToastService } from '../../shared/ui/toast';
 import { Router } from '@angular/router';
+import { CardKind, Level, LEVELS, Question } from '../../core/game/game.model';
+import { buildDeck } from '../../data/mock-data';
+import { Card } from '../card-flip/components/card/card';
+import { EmptyCard } from '../card-flip/components/empty-card/empty-card';
 
 const C = 165; // tâm
 const R = 136.4; // bán kính hình tròn
@@ -23,7 +28,7 @@ const point = (r: number, deg: number) => {
 };
 
 @Component({
-  imports: [Button, Icon, IconButton],
+  imports: [Button, Icon, IconButton, Card, EmptyCard],
   selector: 'app-random-wheel',
   styleUrl: './random-wheel.css',
   templateUrl: './random-wheel.html',
@@ -32,6 +37,7 @@ const point = (r: number, deg: number) => {
 export class RandomWheel implements OnInit, OnDestroy {
   private readonly gameStore = inject(GameSessionStore);
   private router = inject(Router);
+  private readonly toast = inject(ToastService);
   PIN_COUNT = 12;
   readonly powerLevels = Array.from({ length: 10 }, (_, i) => i + 1);
   readonly power = signal(0);
@@ -39,11 +45,21 @@ export class RandomWheel implements OnInit, OnDestroy {
   readonly duration = signal(4);
   readonly spinning = signal(false);
   readonly rotation = signal(0);
+  readonly truthDeck = signal<Question[]>([]);
+  readonly dareDeck = signal<Question[]>([]);
+  readonly currentCard = signal<Question | null>(null);
+  /** Loại thẻ vừa chọn nhưng đã hết câu → hiện màn 2C. */
+  readonly exhaustedKind = signal<CardKind | null>(null);
+  private readonly deckTotals = signal<Partial<Record<CardKind, number>>>({});
 
   private timer?: ReturnType<typeof setInterval>;
   private dir = 1;
+  CardKind = CardKind;
 
-  BOTTOM_ACTIONS = [
+  readonly level = computed(() => this.gameStore.level());
+  readonly levelLabel = computed(() => levelLabel(this.level()));
+
+  readonly bottomActions = computed(() => [
     {
       icon: 'users',
       label: 'Người chơi',
@@ -51,13 +67,33 @@ export class RandomWheel implements OnInit, OnDestroy {
         this.router.navigate(['/nguoi-choi']);
       },
     },
-    { icon: 'adjust', label: 'Mức: vừa', action: () => {} },
-    { icon: 'book', label: 'Luật chơi', action: () => {} },
-  ];
+    {
+      icon: 'adjust',
+      label: `Mức: ${this.levelLabel().toLowerCase()}`,
+      action: () => this.toast.comingSoon(),
+    },
+    { icon: 'book', label: 'Luật chơi', action: () => this.toast.comingSoon() },
+  ]);
 
+  readonly exhaustedTotal = computed(() => {
+    const kind = this.exhaustedKind();
+    return kind ? (this.deckTotals()[kind] ?? 0) : 0;
+  });
+  readonly otherKind = computed(() =>
+    this.exhaustedKind() === CardKind.TRUTH ? CardKind.DARE : CardKind.TRUTH,
+  );
+  readonly canSwitchKind = computed(() => this.deckSignal(this.otherKind())().length > 0);
+  /** Nhẹ → Vừa, Vừa → Nặng; đang Nặng thì gợi ý hạ xuống Vừa. */
+  readonly nextLevel = computed(() =>
+    this.level() === Level.HARD ? Level.MEDIUM : ((this.level() + 1) as Level),
+  );
+  readonly nextLevelLabel = computed(() => levelLabel(this.nextLevel()));
+
+  round = computed(() => this.gameStore.round());
   players = computed(() => this.gameStore.players());
   currentRoundPlayers = computed(() => this.gameStore.currentRoundPlayers());
   selectedPlayer = computed(() => this.gameStore.selectedPlayer());
+  playedPlayers = computed(() => this.gameStore.playedPlayers());
 
   readonly slices = computed(() => {
     const list = this.currentRoundPlayers();
@@ -105,18 +141,10 @@ export class RandomWheel implements OnInit, OnDestroy {
     return this.spinning() ? spinningText : this.charging() ? chargingText : normalText;
   });
 
-  constructor() {
-    // effect(() => {
-    //   if (this.round()) {
-    //     this.currentRoundPlayers.update((data) =>
-    //       data.filter((p: Player) => p.id !== this.selectedPlayer()?.id),
-    //     );
-    //   }
-    // });
-  }
-
   ngOnInit(): void {
     this.gameStore.initGame();
+    this.rebuildDeck(CardKind.TRUTH);
+    this.rebuildDeck(CardKind.DARE);
   }
 
   ngOnDestroy(): void {
@@ -171,4 +199,81 @@ export class RandomWheel implements OnInit, OnDestroy {
     this.spinning.set(false);
     this.power.set(0);
   }
+
+  randomSelectCard() {
+    // Ưu tiên loại còn câu; hết cả hai thì vẫn random để mở màn hết câu
+    const kinds = [CardKind.TRUTH, CardKind.DARE];
+    const available = kinds.filter((k) => this.deckSignal(k)().length > 0);
+    const pool = available.length ? available : kinds;
+    this.selectCard(pool[Math.floor(Math.random() * pool.length)]);
+  }
+
+  selectCard(kind: CardKind) {
+    const deck = this.deckSignal(kind);
+    const [card, ...rest] = deck();
+    if (!card) {
+      this.exhaustedKind.set(kind);
+      return;
+    }
+    this.exhaustedKind.set(null);
+    this.currentCard.set(card);
+    deck.set(rest);
+  }
+
+  switchKind() {
+    this.selectCard(this.otherKind());
+  }
+
+  reshuffle() {
+    const kind = this.exhaustedKind();
+    if (!kind) return;
+    this.rebuildDeck(kind);
+    this.selectCard(kind);
+    this.toast.show(`Đã trộn lại câu ${kind === CardKind.TRUTH ? 'Thật' : 'Thách'}`, 'shuffle');
+  }
+
+  changeLevel() {
+    const kind = this.exhaustedKind();
+    if (!kind) return;
+    this.gameStore.level.set(this.nextLevel());
+    this.rebuildDeck(CardKind.TRUTH);
+    this.rebuildDeck(CardKind.DARE);
+    this.selectCard(kind);
+  }
+
+  addGroupQuestions() {
+    this.toast.comingSoon();
+  }
+
+  private deckSignal(kind: CardKind) {
+    return kind === CardKind.TRUTH ? this.truthDeck : this.dareDeck;
+  }
+
+  private rebuildDeck(kind: CardKind) {
+    const deck = buildDeck({ level: this.gameStore.level(), kinds: [kind] });
+    this.deckSignal(kind).set(deck);
+    this.deckTotals.update((t) => ({ ...t, [kind]: deck.length }));
+  }
+
+  nextTurn() {
+    if (this.currentRoundPlayers().length === 1) {
+      this.gameStore.initGame(this.gameStore.round() + 1);
+      this.currentCard.set(null);
+      this.exhaustedKind.set(null);
+      return;
+    }
+    if (this.selectedPlayer()) {
+      // this.gameStore.playedPlayers.update((v) => [...v, this.selectedPlayer()!]);
+      // this.gameStore.currentRoundPlayers.update((v) =>
+      //   v.filter((p) => p.id !== this.selectedPlayer()?.id),
+      // );
+      this.gameStore.selectedPlayer.set(null);
+      this.currentCard.set(null);
+      this.exhaustedKind.set(null);
+    }
+  }
+}
+
+function levelLabel(level: Level): string {
+  return LEVELS.find((l) => l.value === level)?.label ?? '';
 }
