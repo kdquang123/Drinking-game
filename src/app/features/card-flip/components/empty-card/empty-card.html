@@ -1,0 +1,56 @@
+<div class="frame" role="status">
+  <svg class="illo" viewBox="0 0 220 220" aria-hidden="true">
+    <!-- Thẻ phía sau -->
+    <rect
+      x="40"
+      y="30"
+      width="100"
+      height="150"
+      rx="12"
+      transform="rotate(-12 90 105)"
+      fill="var(--back-stripe, #dfe6f7)"
+      stroke="var(--ink)"
+      stroke-width="5"
+      stroke-dasharray="12 8"
+    />
+    <!-- Thẻ mếu -->
+    <g transform="rotate(8 120 110)">
+      <rect
+        x="70"
+        y="25"
+        width="110"
+        height="160"
+        rx="14"
+        fill="var(--card)"
+        stroke="var(--ink)"
+        stroke-width="6"
+      />
+      <circle cx="108" cy="90" r="5" fill="var(--ink)" />
+      <circle cx="142" cy="90" r="5" fill="var(--ink)" />
+      <path
+        d="M105 128 Q125 110 145 128"
+        fill="none"
+        stroke="var(--ink)"
+        stroke-width="6"
+        stroke-linecap="round"
+      />
+    </g>
+    <!-- Giọt mồ hôi -->
+    <path
+      d="M192 62 q-9 14 -2 20 q7 3 9 -5 q1 -7 -7 -15z"
+      fill="var(--truth)"
+      stroke="var(--ink)"
+      stroke-width="3"
+      stroke-linejoin="round"
+    />
+  </svg>
+
+  <p class="title">
+    {{ heading() }}<br />
+    mức {{ levelText() }} rồi!
+  </p>
+  <p class="desc">
+    Nhóm đã chơi hết {{ total() }}/{{ total() }} {{ unit() }} trong ván này.
+    {{ playerName() || 'Bạn' }} muốn chơi tiếp thế nào?
+  </p>
+</div>

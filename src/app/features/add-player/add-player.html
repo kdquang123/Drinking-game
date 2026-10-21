@@ -1,0 +1,60 @@
+<div class="flex flex-col flex-1 min-w-0 min-h-0">
+  <p class="type-body-s my-4 text-muted text-center">Nhập tên những người đang ngồi cùng bàn</p>
+  <div>
+    <label class="type-body-s text-muted">Tên người chơi</label>
+    <div class="flex gap-2.5">
+      <input
+        #playerInput
+        class="flex-1 outline-0 bg-surface! px-4.5 py-4 rounded-m"
+        [(ngModel)]="playerName"
+        placeholder="VD: Minh"
+        (blur)="playerName = playerName.trim()"
+        (keydown.enter)="addPlayer()"
+      />
+      <button
+        appIconButton
+        class="bg-drink! w-14 h-14 text-text!"
+        (pointerdown)="$event.preventDefault()"
+        (click)="addPlayer()"
+      >
+        <app-icon name="plus" [size]="24" [strokeWidth]="2.6" class="text-text" />
+      </button>
+    </div>
+    @if (errorText().length) {
+      <p class="type-body-s text-error mt-2.5">{{ errorText() }}</p>
+    } @else {
+      <p class="type-body-s text-muted mt-2.5">Tối đa 12 ký tự · nhấn Enter để thêm nhanh</p>
+    }
+  </div>
+  <!-- List player -->
+  <div class="flex justify-between items-center mt-4 mb-2">
+    <span class="type-card-body">Đã thêm {{ listPlayer().length }}/10</span>
+    <span class="type-caption text-muted">Tối thiểu 2 người</span>
+  </div>
+  <div class="flex flex-col flex-1 gap-2 min-h-0 overflow-y-auto mb-2">
+    @for (player of listPlayer(); track player.id) {
+      <div class="h-14 shrink-0 flex items-center gap-2 p-2.5 rounded-m bg-surface">
+        <div class="flex flex-1 min-w-0 items-center gap-1">
+          <app-avatar class="shrink-0" [name]="player.name" [slot]="player.slot"></app-avatar>
+          <span class="inline-block flex-1 min-w-0 truncate">{{ player.name }}</span>
+        </div>
+        <button class="flex shrink-0 items-center" (click)="removePlayer(player.id)">
+          <app-icon name="mask-icon" [size]="20" class="text-muted!"></app-icon>
+        </button>
+      </div>
+    }
+  </div>
+  @if (!hasEnoughPlayers()) {
+    <p class="type-caption mb-2 text-center text-muted">
+      Cần thêm {{ minPlayer - listPlayer().length }} người nữa để bắt đầu
+    </p>
+  }
+  <a
+    [ariaDisabled]="!hasEnoughPlayers()"
+    appButton
+    [routerLink]="startLink()"
+    [class]="{ 'bg-drink! text-text!': hasEnoughPlayers() }"
+  >
+    Bắt đầu chơi
+  </a>
+</div>

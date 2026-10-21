@@ -1,6 +1,10 @@
 export type PlayMode = 'quay-chai' | 'lat-the';
 
-export type Level = 'nhe' | 'vua' | 'nang';
+export enum Level {
+  EASY = 1,
+  MEDIUM = 2,
+  HARD = 3,
+}
 
 export interface LevelOption {
   value: Level;
@@ -10,9 +14,9 @@ export interface LevelOption {
 }
 
 export const LEVELS: readonly LevelOption[] = [
-  { value: 'nhe', label: 'Nhẹ', sips: 1 },
-  { value: 'vua', label: 'Vừa', sips: 2 },
-  { value: 'nang', label: 'Nặng', sips: 3 },
+  { value: Level.EASY, label: 'Nhẹ', sips: 1 },
+  { value: Level.MEDIUM, label: 'Vừa', sips: 2 },
+  { value: Level.HARD, label: 'Nặng', sips: 3 },
 ];
 
 export const MIN_PLAYERS = 2;
@@ -35,3 +39,32 @@ export interface GameSession {
   level: Level;
   players: Player[];
 }
+
+export enum CardKind {
+  TRUTH = 'truth',
+  DARE = 'dare',
+  DRINK = 'drink',
+}
+export type IlloKey = 'love' | 'social' | 'drink' | 'body' | 'vote' | 'secret';
+export interface Question {
+  id: string;
+  kind: CardKind;
+  level?: Level;
+  illo: IlloKey;
+  pre: string;
+  hl: string;
+  post: string;
+  timer?: number;
+  sips?: number;
+  target?: string;
+}
+
+export type Row = [illo: IlloKey, pre: string, hl: string, post: string, timer?: number];
+export type DrinkRow = [
+  illo: IlloKey,
+  pre: string,
+  hl: string,
+  post: string,
+  sips: number,
+  target: string,
+];

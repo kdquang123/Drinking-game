@@ -1,0 +1,30 @@
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0px;
+  container-type: inline-size;
+}
+
+.shaking {
+  animation: shake 0.1s linear infinite;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(1px) rotate(2deg);
+  }
+  75% {
+    transform: translateX(-1px) rotate(-2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shaking {
+    animation: none;
+  }
+}

@@ -16,7 +16,7 @@ import { IconButton } from '../../shared/ui/icon-button';
         </a>
         <h1 class="type-display-m text-text uppercase">{{ title() }}</h1>
       </header>
-      <p class="type-body-s mt-6 text-muted">Màn này chưa được xây dựng.</p>
+      <p class="type-body-s mt-6 text-muted">Tính năng đang phát triển</p>
       <ng-content />
     </main>
   `,
