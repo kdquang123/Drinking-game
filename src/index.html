@@ -1,35 +1,41 @@
 <!doctype html>
 <html lang="vi" data-theme="dark">
-<head>
-  <meta charset="utf-8">
-  <title>Chén Vào, Chuyện Ra</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#241548">
-  <meta name="description" content="Thật hay Thách – drinking game cho hội bạn 18+">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chén Vào, Chuyện Ra</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#241548" />
+    <meta name="description" content="Thật hay Thách – drinking game cho hội bạn 18+" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Be+Vietnam+Pro:wght@500;700;800;900&display=swap">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&amp;family=Be+Vietnam+Pro:wght@500;700;800;900&amp;display=swap"
+    />
 
-  <!-- Gắn theme trước khi Angular khởi động để không bị nháy màu.
+    <!-- Gắn theme trước khi Angular khởi động để không bị nháy màu.
        Key và danh sách theme phải khớp với STORAGE_KEYS.theme / THEMES trong src/app/core. -->
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var themes = { dark: '#241548', light26: '#F0EEE9', light27: '#EEF3FF' };
-      try {
-        var saved = JSON.parse(localStorage.getItem('thth.theme'));
-        if (themes[saved]) {
-          root.dataset.theme = saved;
-          document.querySelector('meta[name="theme-color"]').content = themes[saved];
-        }
-      } catch (e) {}
-    })();
-  </script>
-</head>
-<body>
-  <app-root></app-root>
-</body>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var themes = { dark: '#241548', light26: '#F0EEE9', light27: '#EEF3FF' };
+        try {
+          var saved = JSON.parse(localStorage.getItem('thth.theme'));
+          if (themes[saved]) {
+            root.dataset.theme = saved;
+            document.querySelector('meta[name="theme-color"]').content = themes[saved];
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="manifest" href="manifest.webmanifest" />
+  </head>
+  <body>
+    <app-root></app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+  </body>
 </html>
