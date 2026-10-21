@@ -2,7 +2,7 @@ export const THEMES = ['dark', 'light26', 'light27'] as const;
 
 export type ThemeKey = (typeof THEMES)[number];
 
-export const DEFAULT_THEME: ThemeKey = 'dark';
+export const DEFAULT_THEME: ThemeKey = 'light27';
 
 export interface ThemeMeta {
   label: string;
@@ -14,17 +14,17 @@ export interface ThemeMeta {
 export const THEME_META: Record<ThemeKey, ThemeMeta> = {
   dark: {
     label: 'Dark Party',
-    description: 'Tím đêm, neon rực rỡ',
+    description: 'Tím đêm + neon, hợp tiệc tối, đỡ chói mắt',
     background: '#241548',
   },
   light26: {
     label: 'Light 2026',
-    description: 'Transformative Teal trên nền Cloud Dancer',
+    description: 'Cloud Dancer + Transformative Teal, màu trend 2026',
     background: '#F0EEE9',
   },
   light27: {
     label: 'Light 2027',
-    description: 'Luminous Blue đi kèm lime',
+    description: 'Luminous Blue, màu trend dự đoán 2027',
     background: '#EEF3FF',
   },
 };

@@ -1,0 +1,101 @@
+<div class="-mx-(--page-x) flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-(--page-x) pt-5">
+  <!-- Âm thanh -->
+  <section>
+    <h2 class="type-label mb-2 px-1 text-muted uppercase">Âm thanh</h2>
+    <ul class="rounded-l bg-surface">
+      <li class="row">
+        <span class="row-title">Âm thanh hiệu ứng</span>
+        <app-toggle
+          label="Âm thanh hiệu ứng"
+          (checkedChange)="toggleSetting(STORAGE_KEYS.soundEffects, $event)"
+          [(checked)]="soundEffects"
+        />
+      </li>
+      <li class="row">
+        <span class="row-title">Nhạc nền</span>
+        <app-toggle
+          label="Nhạc nền"
+          (checkedChange)="toggleSetting(STORAGE_KEYS.backgroundMusic, $event)"
+          [(checked)]="backgroundMusic"
+        />
+      </li>
+    </ul>
+  </section>
+
+  <!-- Giao diện -->
+  <section>
+    <h2 class="type-label mb-2 px-1 text-muted uppercase">Giao diện</h2>
+    <ul class="rounded-l bg-surface">
+      <li class="row">
+        <a routerLink="/cai-dat/giao-dien" class="row-link py-3">
+          <span class="flex h-7 shrink-0 overflow-hidden rounded-xs" aria-hidden="true">
+            @for (color of themeSwatches; track color) {
+              <span class="w-3.5" [style.background]="color"></span>
+            }
+          </span>
+          <span class="row-title">Theme</span>
+          <span class="type-body-m shrink-0 text-muted">{{ themeLabel() }}</span>
+          <app-icon name="chevron-right" [size]="20" class="shrink-0 text-muted" />
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Luật chơi -->
+  <section>
+    <h2 class="type-label mb-2 px-1 text-muted uppercase">Luật chơi</h2>
+    <ul class="rounded-l bg-surface">
+      <li class="row py-2">
+        <span id="level-label" class="row-title">Mức độ mặc định</span>
+        <app-segmented
+          class="shrink-0"
+          aria-labelledby="level-label"
+          [options]="levelOptions"
+          [(value)]="level"
+        />
+      </li>
+      <li class="row">
+        <span class="row-title">Phạt khi bỏ qua</span>
+        <span class="type-body-s shrink-0 text-muted">Nhẹ 1 · Vừa 2 · Nặng 3 ngụm</span>
+      </li>
+      <li class="row">
+        <span class="row-title">Loại người đã chơi khỏi vòng</span>
+        <app-toggle
+          label="Loại người đã chơi khỏi vòng"
+          (checkedChange)="toggleSetting(STORAGE_KEYS.excludePlayed, $event)"
+          [(checked)]="excludePlayed"
+        />
+      </li>
+    </ul>
+  </section>
+
+  <!-- Câu hỏi & khác -->
+  <section>
+    <h2 class="type-label mb-2 px-1 text-muted uppercase">Câu hỏi &amp; khác</h2>
+    <ul class="rounded-l bg-surface">
+      <li class="row">
+        <button type="button" class="row-link">
+          <span class="row-title">Câu hỏi của nhóm</span>
+          <span class="type-body-m shrink-0 text-muted">{{ questionCount }} câu</span>
+          <app-icon name="chevron-right" [size]="20" class="shrink-0 text-muted" />
+        </button>
+      </li>
+      <li class="row">
+        <button type="button" class="row-link">
+          <span class="row-title">Cách chơi</span>
+          <app-icon name="chevron-right" [size]="20" class="shrink-0 text-muted" />
+        </button>
+      </li>
+      <li class="row">
+        <button type="button" class="row-link">
+          <span class="row-title">Uống có trách nhiệm</span>
+          <app-icon name="chevron-right" [size]="20" class="shrink-0 text-muted" />
+        </button>
+      </li>
+    </ul>
+  </section>
+
+  <p class="type-caption mt-auto pb-2 text-center text-muted">
+    Thật hay Thách · phiên bản 1.0 · chỉ dành cho 18+
+  </p>
+</div>

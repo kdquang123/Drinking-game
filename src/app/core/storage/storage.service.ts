@@ -4,6 +4,10 @@ import { Injectable } from '@angular/core';
 export const STORAGE_KEYS = {
   theme: 'thth.theme',
   session: 'thth.session.v1',
+  soundEffects: 'soundEffects',
+  backgroundMusic: 'backgroundMusic',
+  excludePlayed: 'excludePlayed',
+  level: 'level',
 } as const;
 
 /**

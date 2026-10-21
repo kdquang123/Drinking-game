@@ -176,10 +176,11 @@
       </svg>
       <!-- Chai ở giữa -->
       <div
+        #bottle
         class="absolute left-1/2 top-1/2 h-[65%] w-[23%] text-white drop-shadow"
         [style.transform]="'translate(-50%, -50%) rotate(' + rotation() + 'deg)'"
         [style.transition]="
-          spinning() ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none'
+          spinning() ? 'transform ' + duration() + 's cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none'
         "
         aria-label="Quay chai"
         (transitionend)="onEnd($event)"

@@ -9,8 +9,28 @@ const placeholder = () => import('./features/placeholder/placeholder').then((m) 
 export const routes: Routes = [
   { path: '', component: Home, title: 'Chén Vào, Chuyện Ra' },
   {
+    path: 'cai-dat/giao-dien',
+    component: SettingLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/theme-picker/theme-picker').then((m) => m.ThemePicker),
+      },
+    ],
+    data: { title: 'Giao diện', back: '/cai-dat' },
+    title: 'Giao diện',
+  },
+  {
     path: 'cai-dat',
-    loadComponent: () => import('./features/settings/settings').then((m) => m.Settings),
+    component: SettingLayout,
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/settings/settings').then((m) => m.Settings),
+      },
+    ],
+    data: { title: 'Cài đặt' },
     title: 'Cài đặt',
   },
   {

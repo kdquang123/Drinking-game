@@ -1,0 +1,73 @@
+<p class="type-body-s my-4 text-center text-muted">
+  Chọn màu cho cả bàn tiệc. Đổi lúc nào cũng được.
+</p>
+
+<div
+  class="-mx-(--page-x) flex min-h-0 flex-1 flex-col gap-3.5 overflow-y-auto px-(--page-x) py-1"
+  role="radiogroup"
+  aria-label="Chọn giao diện"
+>
+  @for (theme of themes; track theme.key) {
+    @let checked = theme.key === selected();
+    <button
+      type="button"
+      role="radio"
+      class="relative flex shrink-0 items-center gap-4 rounded-xl bg-surface p-3 text-left transition-shadow"
+      [class.ring-selected]="checked"
+      [attr.aria-checked]="checked"
+      (click)="select(theme.key)"
+    >
+      <!-- Ô xem trước: dùng token của chính theme đó -->
+      <span
+        class="flex h-28 w-26 shrink-0 flex-col items-center justify-center gap-2 rounded-l bg-bg"
+        [attr.data-theme]="theme.key"
+        aria-hidden="true"
+      >
+        <span
+          class="size-14.5 rounded-pill"
+          style="
+            background: conic-gradient(
+              var(--w0) 0 25%,
+              var(--w1) 0 50%,
+              var(--w2) 0 75%,
+              var(--w3) 0
+            );
+          "
+        ></span>
+        <span class="flex gap-1">
+          <span class="h-3 w-8.5 rounded-pill bg-truth"></span>
+          <span class="h-3 w-8.5 rounded-pill bg-dare"></span>
+        </span>
+      </span>
+
+      <span class="flex min-w-0 flex-1 flex-col gap-1.5">
+        <span class="font-display text-xl leading-tight font-extrabold text-text">
+          {{ theme.label }}
+        </span>
+        <span class="type-body-s text-muted">{{ theme.description }}</span>
+        <span class="mt-1 flex gap-1" [attr.data-theme]="theme.key" aria-hidden="true">
+          <span class="size-4 rounded-pill bg-w0"></span>
+          <span class="size-4 rounded-pill bg-w1"></span>
+          <span class="size-4 rounded-pill bg-w2"></span>
+          <span class="size-4 rounded-pill bg-w3"></span>
+          <span
+            class="size-4 rounded-pill"
+            [class]="theme.key === 'dark' ? 'bg-card' : 'bg-ink'"
+          ></span>
+        </span>
+      </span>
+
+      @if (checked) {
+        <span
+          class="absolute top-3 right-3 flex size-6.5 items-center justify-center rounded-pill bg-primary text-on-primary"
+          aria-hidden="true"
+        >
+          <app-icon name="check" [size]="16" [strokeWidth]="3" />
+        </span>
+      }
+    </button>
+  }
+</div>
+
+<p class="type-body-s mt-4 mb-2 text-center text-muted">Đang xem trước: {{ selectedLabel() }}</p>
+<button appButton (click)="apply()">Áp dụng</button>

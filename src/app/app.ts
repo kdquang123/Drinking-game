@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from './shared/ui/toast';
+import { AudioService } from './services/audio.service';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,9 @@ import { Toast } from './shared/ui/toast';
     </div>
   `,
 })
-export class App {}
+export class App {
+  constructor() {
+    // Khởi tạo sớm để nhạc nền và listener mở khoá âm thanh chạy trên mọi màn
+    inject(AudioService);
+  }
+}

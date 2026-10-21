@@ -7,6 +7,7 @@ import { GameSessionStore } from '../../core/game/game-session.store';
 import { Button } from '../../shared/ui/button';
 import { Icon } from '../../shared/ui/icon';
 import { ToastService } from '../../shared/ui/toast';
+import { AudioService } from '../../services/audio.service';
 
 @Component({
   imports: [Card, EmptyCard, Button, Icon],
@@ -17,6 +18,7 @@ import { ToastService } from '../../shared/ui/toast';
 export class CardFlip implements OnInit {
   private readonly gameSession = inject(GameSessionStore);
   private readonly toast = inject(ToastService);
+  private readonly audioService = inject(AudioService);
   readonly deck = signal<Question[]>([]);
   readonly drawnIndex = signal(-1);
   readonly flipped = signal(false);
@@ -50,11 +52,13 @@ export class CardFlip implements OnInit {
   next() {
     if (this.flipped()) {
       this.flipped.set(false);
+      this.audioService.playSfx('cardFlip');
       return;
     }
     if (this.remaining() <= 0) return;
     this.drawnIndex.update((i) => i + 1);
     this.flipped.set(true);
+    this.audioService.playSfx('cardFlip');
   }
 
   shuffle() {

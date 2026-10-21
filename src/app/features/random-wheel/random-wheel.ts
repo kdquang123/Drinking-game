@@ -2,10 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   OnDestroy,
   OnInit,
   signal,
+  viewChild,
 } from '@angular/core';
 import { GameSessionStore } from '../../core/game/game-session.store';
 import { Button } from '../../shared/ui/button';
@@ -17,10 +19,13 @@ import { CardKind, Level, LEVELS, Question } from '../../core/game/game.model';
 import { buildDeck } from '../../data/mock-data';
 import { Card } from '../card-flip/components/card/card';
 import { EmptyCard } from '../card-flip/components/empty-card/empty-card';
+import { AudioService } from '../../services/audio.service';
 
 const C = 165; // tâm
 const R = 136.4; // bán kính hình tròn
 const TEXT_R = 90; // khoảng cách đặt tên tính từ tâm
+
+const TICK_MIN_GAP = 40; // ms giữa 2 tiếng, tránh rè khi chai quay quá nhanh
 
 const point = (r: number, deg: number) => {
   const a = (deg * Math.PI) / 180;
@@ -37,6 +42,7 @@ const point = (r: number, deg: number) => {
 export class RandomWheel implements OnInit, OnDestroy {
   private readonly gameStore = inject(GameSessionStore);
   private router = inject(Router);
+  private readonly audioService = inject(AudioService);
   private readonly toast = inject(ToastService);
   PIN_COUNT = 12;
   readonly powerLevels = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -54,6 +60,8 @@ export class RandomWheel implements OnInit, OnDestroy {
 
   private timer?: ReturnType<typeof setInterval>;
   private dir = 1;
+  private readonly bottle = viewChild<ElementRef<HTMLElement>>('bottle');
+  private tickFrame = 0;
   CardKind = CardKind;
 
   readonly level = computed(() => this.gameStore.level());
@@ -151,6 +159,7 @@ export class RandomWheel implements OnInit, OnDestroy {
     if (this.timer) {
       clearInterval(this.timer);
     }
+    this.stopTicking();
   }
 
   startCharge(e?: PointerEvent) {
@@ -186,10 +195,12 @@ export class RandomWheel implements OnInit, OnDestroy {
     const extra = 360 * turns + Math.random() * 360;
     this.spinning.set(true);
     this.rotation.update((r) => r + extra);
+    this.startTicking();
   }
 
   onEnd(e: TransitionEvent) {
     if (e.propertyName !== 'transform') return;
+    this.stopTicking();
     const list = this.currentRoundPlayers();
     const step = 360 / list.length;
     const angle = ((this.rotation() % 360) + 360) % 360;
@@ -198,6 +209,7 @@ export class RandomWheel implements OnInit, OnDestroy {
     this.gameStore.selectedPlayer.set(list[index]);
     this.spinning.set(false);
     this.power.set(0);
+    this.audioService.playSfx('winner');
   }
 
   randomSelectCard() {
@@ -245,6 +257,43 @@ export class RandomWheel implements OnInit, OnDestroy {
     this.toast.comingSoon();
   }
 
+  /** Mỗi frame đọc góc thật của chai; chai qua ranh giới giữa 2 ô thì kêu 1 tiếng. */
+  private startTicking() {
+    this.stopTicking();
+    const el = this.bottle()?.nativeElement;
+    const n = this.currentRoundPlayers().length;
+    if (!el || n < 2) return;
+
+    const step = 360 / n;
+    // Tâm ô i ở i * step nên ranh giới nằm ở step/2 + k * step
+    const sliceOf = (deg: number) => Math.floor((deg + step / 2) / step);
+    let prev = readAngle(el);
+    let total = prev; // góc cộng dồn, không bị quấn về -180..180
+    let slice = sliceOf(total);
+    let lastTickAt = 0;
+
+    const frame = (now: number) => {
+      const angle = readAngle(el);
+      total += ((angle - prev + 540) % 360) - 180;
+      prev = angle;
+      const current = sliceOf(total);
+      if (current !== slice) {
+        slice = current;
+        if (now - lastTickAt >= TICK_MIN_GAP) {
+          lastTickAt = now;
+          this.audioService.playSfx('tick', 1);
+        }
+      }
+      this.tickFrame = requestAnimationFrame(frame);
+    };
+    this.tickFrame = requestAnimationFrame(frame);
+  }
+
+  private stopTicking() {
+    cancelAnimationFrame(this.tickFrame);
+    this.tickFrame = 0;
+  }
+
   private deckSignal(kind: CardKind) {
     return kind === CardKind.TRUTH ? this.truthDeck : this.dareDeck;
   }
@@ -272,6 +321,14 @@ export class RandomWheel implements OnInit, OnDestroy {
       this.exhaustedKind.set(null);
     }
   }
+}
+
+/** Góc xoay hiện tại (độ, -180..180) lấy từ transform đang chạy của phần tử. */
+function readAngle(el: HTMLElement): number {
+  const transform = getComputedStyle(el).transform;
+  if (!transform || transform === 'none') return 0;
+  const m = new DOMMatrixReadOnly(transform);
+  return (Math.atan2(m.b, m.a) * 180) / Math.PI;
 }
 
 function levelLabel(level: Level): string {
