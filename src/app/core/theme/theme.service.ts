@@ -8,8 +8,8 @@ const SWITCH_TRANSITION_MS = 350;
  * Theme của toàn app. Ghi `data-theme` lên <html>; mọi màu là CSS variable nên
  * component không cần biết theme hiện tại.
  *
- * Muốn xem trước một theme trong phạm vi nhỏ (màn Chọn giao diện), chỉ cần gắn
- * `[attr.data-theme]="previewTheme()"` lên khung của màn đó, không gọi service này.
+ * Muốn xem trước một theme trong phạm vi nhỏ, gắn `[attr.data-theme]` lên khung đó.
+ * Muốn xem trước cả màn (màn Chọn giao diện) thì dùng `preview()`: chỉ đổi màu, không lưu.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -20,23 +20,31 @@ export class ThemeService {
   private readonly current = signal<ThemeKey>(
     this.storage.read(STORAGE_KEYS.theme, isThemeKey) ?? DEFAULT_THEME,
   );
+  private readonly previewing = signal<ThemeKey | null>(null);
   readonly theme = this.current.asReadonly();
 
   constructor() {
     effect(() => {
-      const theme = this.current();
+      const theme = this.previewing() ?? this.current();
       this.document.documentElement.dataset['theme'] = theme;
       this.document
         .querySelector('meta[name="theme-color"]')
         ?.setAttribute('content', THEME_META[theme].background);
-      this.storage.write(STORAGE_KEYS.theme, theme);
     });
+    effect(() => this.storage.write(STORAGE_KEYS.theme, this.current()));
   }
 
   set(theme: ThemeKey): void {
+    this.previewing.set(null);
     if (theme === this.current()) return;
     this.animateSwitch();
     this.current.set(theme);
+  }
+
+  /** Xem trước một theme mà không lưu. Truyền `null` để bỏ xem trước, quay về theme đang dùng. */
+  preview(theme: ThemeKey | null): void {
+    if ((theme ?? this.current()) !== (this.previewing() ?? this.current())) this.animateSwitch();
+    this.previewing.set(theme);
   }
 
   private animateSwitch(): void {
