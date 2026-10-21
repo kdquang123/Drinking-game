@@ -8,7 +8,8 @@ import { CardKind, IlloKey } from '../../../../core/game/game.model';
   templateUrl: './card-illo.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'block overflow-hidden rounded-ctl',
+    // SVG đặt absolute để luôn khớp khung: Safari không resolve được h-full cho SVG ở đây.
+    class: 'relative block size-full overflow-hidden rounded-ctl',
     'aria-hidden': 'true',
     '[style.background]': "'var(--' + bgVar() + ')'",
     '[style.--ia]':

@@ -40,13 +40,15 @@
   -webkit-backface-visibility: hidden;
 }
 
-/* WebKit (Safari, mọi trình duyệt trên iOS): phần tử con có z-index / overflow
-   bị tách thành layer riêng và không kế thừa backface-visibility, nên mặt sau
-   lọt qua mặt trước (chữ bị lật ngược). Ẩn mặt sau cho cả các con. */
-.face > *,
-.face::after {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+/* WebKit (Safari, mọi trình duyệt trên iOS) không đáng tin với backface-visibility:
+   phần tử con có z-index / overflow bị tách layer riêng nên mặt sau lọt qua mặt trước.
+   Ẩn hẳn mặt bị úp; đổi visibility ở giữa lượt lật (90°, lúc thẻ nằm nghiêng) để không thấy giật. */
+.face {
+  transition: visibility 0s linear 0.3s;
+}
+.card.flipped .back,
+.card:not(.flipped) .front {
+  visibility: hidden;
 }
 
 .face::after {
@@ -123,9 +125,13 @@
   color: #6b7f7d;
 }
 
+/* Không dùng aspect-ratio: Safari tính sai aspect-ratio cho flex item (cột) nên hình tràn ra ngoài thẻ.
+   Chiều rộng nội dung = 100cqw - 2 × padding (8.4cqw) - 2 × border (1cqw) = 81.2cqw → cao 40.6cqw (tỉ lệ 2:1). */
 .art {
+  flex: none;
+  min-width: 0;
   margin-top: 2cqw;
-  aspect-ratio: 2 / 1;
+  height: 40.6cqw;
 }
 
 .text {
@@ -155,5 +161,8 @@
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition-duration: 0.01s;
+  }
+  .face {
+    transition-delay: 0s;
   }
 }
